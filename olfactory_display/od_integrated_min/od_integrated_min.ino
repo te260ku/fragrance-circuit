@@ -1,7 +1,7 @@
 bool isSwitched = false;
 bool isReleased = false;
-int landNum = 0;
 const int maxLandNum = 2;
+// 匂いの有無を格納する配列
 bool isSmellArray[maxLandNum] = {true, false};
 
 void setup() {
@@ -9,28 +9,29 @@ void setup() {
   // 基板デバイスで使うピンの設定
   pinMode(2, INPUT);
   pinMode(3, INPUT);
-  
 }
 
-void SetLand(int num, int land) {
+void SetLand(int landNum, int landId) {
+  // landNum: 配列のインデックスに対応する整数
+  // landId: ランドに割り振られた通し番号
+  
   if (!isReleased) {
-    landNum = num;
     isReleased = true;
     isSwitched = true;
   }
-  
-
 
   if (isSwitched) {
-    bool isSmell = isSmellArray[num];
+    bool isSmell = isSmellArray[landNum];
     if (isSmell) {
+      // 匂いがついているランドだったら
       // サーボを回転させる
+    } else {
+      // 匂いがついていないランドだったら
+      // unityに値を送信する
+      Serial.print(landId);
+      Serial.print("\t");
+      Serial.println(""); 
     }
-    
-    // unityに値を送信する
-    Serial.print(landNum);
-    Serial.print("\t");
-    Serial.println("");
     
     isSwitched = false;
   }
@@ -42,10 +43,11 @@ void loop() {
   // 1. どのランドに接触したのか
   // 2. そのランドに匂いは付いているか
   
+  // テスト用に2番ピンと3番ピンを使用
   if (digitalRead(2) == HIGH) {
-    SetLand(0);
+    SetLand(0, 2);
   } else if (digitalRead(3) == HIGH) {
-    SetLand(1);
+    SetLand(1, 3);
   } else {
     isReleased = false;
     isSwitched = false;
