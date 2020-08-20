@@ -11,10 +11,9 @@ void setup() {
   pinMode(3, INPUT);
 }
 
-void SetLand(int landNum, int landId) {
+void SetLand(int landNum) {
   // landNum: 配列のインデックスに対応する整数
-  // landId: ランドに割り振られた通し番号
-  
+
   if (!isReleased) {
     isReleased = true;
     isSwitched = true;
@@ -28,7 +27,7 @@ void SetLand(int landNum, int landId) {
     } else {
       // 匂いがついていないランドだったら
       // unityに値を送信する
-      Serial.print(landId);
+      Serial.print(landNum);
       Serial.print("\t");
       Serial.println(""); 
     }
@@ -45,9 +44,9 @@ void loop() {
   
   // テスト用に2番ピンと3番ピンを使用
   if (digitalRead(2) == HIGH) {
-    SetLand(0, 2);
+    SetLand(0);
   } else if (digitalRead(3) == HIGH) {
-    SetLand(1, 3);
+    SetLand(1);
   } else {
     isReleased = false;
     isSwitched = false;
