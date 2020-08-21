@@ -1,14 +1,19 @@
 bool isSwitched = false;
 bool isReleased = false;
+#include <Servo.h>
+
 const int maxLandNum = 2;
 // 匂いの有無を格納する配列
 bool isSmellArray[maxLandNum] = {true, false};
+Servo servo;
 
 void setup() {
   Serial.begin(9600);
   // 基板デバイスで使うピンの設定
   pinMode(2, INPUT);
   pinMode(3, INPUT);
+  servo.attach(6);
+  servo.write(0);
 }
 
 void SetLand(int landNum) {
@@ -24,12 +29,14 @@ void SetLand(int landNum) {
     if (isSmell) {
       // 匂いがついているランドだったら
       // サーボを回転させる
+      servo.write(90);
     } else {
       // 匂いがついていないランドだったら
       // unityに値を送信する
+      servo.write(0);
       Serial.print(landNum);
       Serial.print("\t");
-      Serial.println(""); 
+      Serial.println("");
     }
     
     isSwitched = false;
@@ -48,6 +55,7 @@ void loop() {
   } else if (digitalRead(3) == HIGH) {
     SetLand(1);
   } else {
+    servo.write(0);
     isReleased = false;
     isSwitched = false;
   }
