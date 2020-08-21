@@ -5,7 +5,9 @@ bool isReleased = false;
 // ランドの合計数
 const int maxLandNum = 30;
 // 匂いの情報を格納する配列
-int smellStates[maxLandNum] = {1, 2};
+int smellStates[maxLandNum] = {
+  0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 
+  0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2};
 Servo servo1;
 Servo servo2;
 
@@ -53,19 +55,76 @@ void SetLand(int landNum) {
     }
 
     Serial.print(landNum);
-      Serial.print("\t");
-      Serial.println("");
+    Serial.print("\t");
+    Serial.println("");
     isSwitched = false;
   }
 }
 
 void loop() {
   
-  // テスト用に2番ピンと3番ピンを使用
-  if (digitalRead(2) == HIGH) {
+  if (digitalRead(21) == HIGH) {
     SetLand(0);
-  } else if (digitalRead(3) == HIGH) {
+  } else if (digitalRead(22) == HIGH) {
     SetLand(1);
+  } else if (digitalRead(23) == HIGH) {
+    SetLand(2);
+  } else if (digitalRead(24) == HIGH) {
+    SetLand(3);
+  } else if (digitalRead(25) == HIGH) {
+    SetLand(4);
+  } else if (digitalRead(26) == HIGH) {
+    SetLand(5);
+  } else if (digitalRead(27) == HIGH) {
+    SetLand(6);
+  } else if (digitalRead(28) == HIGH) {
+    SetLand(7);
+  } else if (digitalRead(29) == HIGH) {
+    SetLand(8);
+  } else if (digitalRead(30) == HIGH) {
+    SetLand(9);
+  } else if (digitalRead(31) == HIGH) {
+    SetLand(10);
+  } else if (digitalRead(32) == HIGH) {
+    SetLand(11);
+  } else if (digitalRead(33) == HIGH) {
+    SetLand(12);
+  } else if (digitalRead(34) == HIGH) {
+    SetLand(13);
+  } else if (digitalRead(35) == HIGH) {
+    SetLand(14);
+  } else if (digitalRead(36) == HIGH) {
+    SetLand(15);
+  } else if (digitalRead(37) == HIGH) {
+    SetLand(16);
+  } else if (digitalRead(38) == HIGH) {
+    SetLand(17);
+  } else if (digitalRead(39) == HIGH) {
+    SetLand(18);
+  } else if (digitalRead(40) == HIGH) {
+    SetLand(19);
+  } else if (digitalRead(41) == HIGH) {
+    SetLand(20);
+  } else if (digitalRead(42) == HIGH) {
+    SetLand(21);
+  } else if (digitalRead(43) == HIGH) {
+    SetLand(22);
+  } else if (digitalRead(44) == HIGH) {
+    SetLand(23);
+  } else if (digitalRead(45) == HIGH) {
+    SetLand(24);
+  } else if (digitalRead(46) == HIGH) {
+    SetLand(25);
+  } else if (digitalRead(47) == HIGH) {
+    SetLand(26);
+  } else if (digitalRead(48) == HIGH) {
+    SetLand(27);
+  } else if (digitalRead(49) == HIGH) {
+    SetLand(28);
+  } else if (digitalRead(50) == HIGH) {
+    SetLand(29);
+  } else if (digitalRead(51) == HIGH) {
+    SetLand(30);
   } else {
     ServoDown(servo1);
     ServoDown(servo2);
