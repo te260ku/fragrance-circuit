@@ -6,10 +6,16 @@ bool isReleased = false;
 const int maxLandNum = 30;
 // 匂いの情報を格納する配列
 int smellStates[maxLandNum] = {
-  0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 
-  0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2};
+  1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 
+  1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0};
 Servo servo1;
 Servo servo2;
+
+const int togglePin1 = 7;
+const int togglePin2 = 8;
+const int pushPin = 6;
+bool isTester = false;
+bool isButtonDown = false;
 
 void ServoDown(Servo s) {
   s.write(0);
@@ -18,11 +24,19 @@ void ServoUp(Servo s) {
   s.write(90);
 }
 
+
+
 void setup() {
   Serial.begin(9600);
   
+  // スイッチ
+  pinMode(togglePin1, INPUT);
+  pinMode(togglePin2, INPUT);
+  pinMode(pushPin, INPUT);
+  
   // デジタルピン
   pinMode(2, INPUT);  
+  
   pinMode(3, INPUT);  
   pinMode(4, INPUT);
   pinMode(14, INPUT);
@@ -62,8 +76,7 @@ void setup() {
   ServoDown(servo2);
 }
 
-void SetLand(int landNum) {
-
+void ReadFragrance(int landNum) {
   if (!isReleased) {
     isReleased = true;
     isSwitched = true;
@@ -74,14 +87,18 @@ void SetLand(int landNum) {
 
     if (smellState == 1) {
       // 匂い1がついているランドの場合
-      ServoUp(servo1);
+//      ServoUp(servo1);
+      servo1.write(90);
     } else if (smellState == 2) {
       // 匂い2がついているランドの場合
-      ServoUp(servo2);
+//      ServoUp(servo2);
+      servo2.write(0);
     } else {
       // 匂いがついていないランドの場合
-      ServoDown(servo1);
-      ServoDown(servo2);
+//      ServoDown(servo1);
+//      ServoDown(servo2);
+      servo1.write(0);
+      servo2.write(90);
       
     }
 
@@ -92,7 +109,40 @@ void SetLand(int landNum) {
   }
 }
 
+void WriteFragrance(int landNum) {
+  if (!isReleased) {
+    isReleased = true;
+    isSwitched = true;
+  }
+
+  if (isSwitched) {
+    int smellState = smellStates[landNum];
+
+    if (smellState == 0) {
+      
+      // 匂いがついていないランドの場合
+      smellStates[landNum] = 1;
+    }
+
+    Serial.print(landNum);
+    Serial.print("\t");
+    Serial.println("");
+    isSwitched = false;
+  }
+}
+
+void SetLand(int landNum) {
+  if (isTester) {
+    ReadFragrance(landNum);
+  } else {
+    WriteFragrance(landNum);
+  }
+
+  
+}
+
 void loop() {
+
   if (digitalRead(3) == HIGH) {
     SetLand(0);
   } else if (digitalRead(4) == HIGH) {
@@ -150,11 +200,52 @@ void loop() {
   } else if (digitalRead(53) == HIGH) {
     SetLand(27);
   } else {
-    ServoDown(servo1);
-    ServoDown(servo2);
+//    ServoDown(servo1);
+//    ServoDown(servo2);
+    servo1.write(0);
+    servo2.write(90);
+    
     isReleased = false;
     isSwitched = false;
   }
+
+
+  // スイッチ
+  if (digitalRead(togglePin1) == HIGH) {
+    if (!isTester) {
+      Serial.print(50);
+      Serial.print("\t");
+      Serial.println("");
+      isTester = true;
+    }
+  } else if (digitalRead(togglePin2) == HIGH) {
+    if (isTester) {
+      Serial.print(60);
+      Serial.print("\t");
+      Serial.println("");
+      isTester = false;
+    }
+  } 
+  
+  if (digitalRead(pushPin) == HIGH) {
+    if (!isButtonDown) {
+      Serial.print(90);
+      Serial.print("\t");
+      Serial.println("");
+      isButtonDown = true;
+    }
+    
+  } else {
+    if (isButtonDown) {
+      Serial.print(80);
+      Serial.print("\t");
+      Serial.println("");
+      isButtonDown = false; 
+    }
+  }
+
+  
+  
   
   delay(100);
 }
